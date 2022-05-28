@@ -36,6 +36,48 @@
       "hair-length": "medium",
       "breasts": "small",
       "eye-color": "green"
-    }
+    },
+    "is_nsfw": false
+  },
+  {
+    "id": "3",
+    "name": "Itsuki Nakano",
+    "anime": "Gotoubun no Hanayome",
+    "url": "https://wallpapercave.com/dwp1x/wp4372975.jpg",
+    "width": "",
+    "height": "",
+    "tags": [
+      "hair-accessories",
+      "school-uniform",
+      "frown"
+    ],
+    "properties": {
+      "hair-color": "red",
+      "hair-length": "long",
+      "breasts": "big",
+      "eye-color": "dark-blue"
+    },
+    "is_nsfw": false
+  },
+  {
+    "id": "4",
+    "name": "",
+    "anime": "",
+    "url": "https://cdn.waifu.im/88e32e1c0b3fd10a.jpeg",
+    "width": "",
+    "height": "",
+    "tags": [
+      "ass",
+      "swimsuit",
+      "sweat",
+      "mole"
+    ],
+    "properties": {
+      "hair-color": "brown",
+      "hair-length": "medium",
+      "breasts": "big",
+      "eye-color": "crimson"
+    },
+    "is_nsfw": true
   }
 ]
