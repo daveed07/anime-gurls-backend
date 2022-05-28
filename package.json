@@ -1,0 +1,22 @@
+{
+  "name": "anime-gurls-api-backend",
+  "version": "1.0.0",
+  "description": "anime girls api",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": [
+    "anime",
+    "anime-girls",
+    "express",
+    "api"
+  ],
+  "author": "David Zúñiga <davidz0703@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "env": "^0.0.2",
+    "express": "^4.18.1"
+  }
+}
