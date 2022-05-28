@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST;
+const HOST = process.env.HOST || 'localhost';
 const images = require('./images.json');
 
 app.use(bodyParser.json());
@@ -35,5 +35,5 @@ app.route('/api/v1/imgs/anime/:anime').get((req, res) => {
 })
 
 app.listen(PORT, HOST, () => {
-  console.log('Server running');
+  console.log(`Server running at http://${HOST}:${PORT}/`);
 })
