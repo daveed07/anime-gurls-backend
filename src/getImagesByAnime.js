@@ -1,4 +1,4 @@
-const pool = require('./pool.config');
+const pool = require('./pool.config').pool;
 
 exports.getImagesByAnime = async (req, res) => {
   try {
