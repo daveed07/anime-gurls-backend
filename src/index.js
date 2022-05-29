@@ -11,6 +11,10 @@ const HOST = process.env.HOST;
 
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 app.route('/api/v1/imgs').get(getImages);
 
 app.route('/api/v1/imgs/random').get(getRandomImage);
