@@ -3,7 +3,7 @@ const pool = require('./pool.config');
 exports.getImagesById = async (req, res) => {
   try {
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM images WHERE id = $1', [req.params.id]);
+    const result = await client.query("SELECT * FROM images WHERE id = $1", [req.params.id]);
     const results = result.rows[0];
     res.status(200).json({ results });
     client.release();
