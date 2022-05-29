@@ -6,7 +6,7 @@ const getNSFWImages = require('./getNSFWImages');
 const getImagesById = require('./getImagesById');
 const getImagesByAnime = require('./getImagesByAnime');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const HOST = process.env.HOST;
 
 app.use(bodyParser.json());
