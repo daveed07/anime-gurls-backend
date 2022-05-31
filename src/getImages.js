@@ -4,7 +4,7 @@ exports.getImages = async (req, res) => {
   try {
     const client = await pool.connect();
     const result = await client.query("SELECT * FROM girl");
-    res.status(200).json(result);
+    res.status(200).json(result.rows);
     client.release();
   } catch (err) {
     console.log(err);
