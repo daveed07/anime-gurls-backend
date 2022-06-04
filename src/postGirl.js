@@ -10,7 +10,7 @@ const insertGirl = async (client, girl) => {
     await client.query(queryString);
 
     // Query the id of the girl
-    const id = await client.query(`SELECT id FROM girl WHERE name = '${girl.name}'`)
+    const id = await client.query(`SELECT id FROM girl WHERE url = '${girl.url}'`)
     if (id.rows.length > 0) {
         return id.rows[0].id;
     } else {
