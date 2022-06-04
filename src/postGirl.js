@@ -56,7 +56,7 @@ exports.postGirl = async (req, res) => {
         const client = await pool.connect();
         const girl = req.body.girl;
         const properties = req.body.properties;
-        const tags = reg.body.tags;
+        const tags = req.body.tags;
         let girlId = await insertGirl(client, girl);
         if (girlId > 0) {
             // We successfully uploaded a girl, continue
