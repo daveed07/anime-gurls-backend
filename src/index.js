@@ -5,6 +5,7 @@ const getRandomImage = require('./getRandomImage').getRandomImage;
 const getNSFWImages = require('./getNSFWImages').getNSFWImages;
 const getImagesById = require('./getImagesById').getImagesById;
 const getImagesByAnime = require('./getImagesByAnime').getImagesByAnime;
+const postGirl = require('./postGirl').postGirl;
 const app = express();
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
@@ -30,6 +31,8 @@ app.route('/api/v1/imgs/nsfw').get(getNSFWImages);
 app.route('/api/v1/imgs/:id').get(getImagesById);
 
 app.route('/api/v1/imgs/anime/:anime').get(getImagesByAnime);
+
+app.route('/api/v1/imgs/upload').post(postGirl);
 
 app.listen(PORT, HOST, () => {
   console.log(`Server running at http://${HOST}:${PORT}/`);
