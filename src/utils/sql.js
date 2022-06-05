@@ -31,9 +31,9 @@ exports.checkQuery = (result) => {
         return false;
     }
     
-    if (result.rows.length > 0) {
-        return true;
+    if (result.rows.length == 0) {
+        return false;
     }
 
-    return false;
+    return -true;
 }

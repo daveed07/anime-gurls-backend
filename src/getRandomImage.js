@@ -1,13 +1,21 @@
-const pool = require('./pool.config').pool;
+const queryGirl = require('./query/girl').queryGirl;
+const sql = require('./utils/sql');
+const { sendError, sendServerStatus } = require('./utils/status');
 
 exports.getRandomImage = async (req, res) => {
   try {
-    const client = await pool.connect();
-    const result = await client.query("SELECT * FROM girl ORDER BY RANDOM() LIMIT 1");
-    res.status(200).json(result.rows[0]);
-    client.release();
+    const result = await sql.query("SELECT * FROM girl ORDER BY RANDOM() LIMIT 1");
+    
+    if (!sql.checkQuery(result)) {
+      sendServerStatus(res, result.rows, 200);
+      return;
+    }
+
+    const girl = await queryGirl(result.rows[0].id);
+
+    sendServerStatus(res, girl, 200);
   } catch (err) {
     console.log(err);
-    res.status(500).send('Server error', err);
+    sendError(err, res);
   }
 }
