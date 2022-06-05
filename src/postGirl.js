@@ -1,4 +1,5 @@
 const pool = require('./pool.config').pool;
+const queryGirl = require("./query/girl").queryGirl;
 
 // Inserts a girl into the DB. Returns the girls id if succesfull, else a 0.
 const insertGirl = async (client, girl) => {
@@ -57,6 +58,12 @@ exports.postGirl = async (req, res) => {
         const girl = req.body.girl;
         const properties = req.body.properties;
         const tags = req.body.tags;
+        // Check if girl already exists
+        if (await queryGirl(girl.url)) {
+            res.status(200).send({ result: "Girl already exists" });
+            return;
+        }
+
         let girlId = await insertGirl(client, girl);
         let propertyId = 0;
         if (girlId > 0) {
@@ -79,6 +86,6 @@ exports.postGirl = async (req, res) => {
         client.release();
     } catch (err) {
         console.log(err);
-        res.status(500).send('Server error', err);
+        res.status(500).send({ 'Server error': err });
     }
 }
