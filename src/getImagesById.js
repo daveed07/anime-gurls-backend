@@ -1,13 +1,12 @@
-const pool = require('./pool.config').pool;
+const { sendServerStatus, sendError } = require('./utils/status');
+const queryGirl = require('./query/girl').queryGirl;
 
 exports.getImagesById = async (req, res) => {
   try {
-    const client = await pool.connect();
-    const result = await client.query("SELECT * FROM girl WHERE id = $1", [req.params.id]);
-    res.status(200).json(result.rows[0]);
-    client.release();
+    const girl = await queryGirl(parseInt(req.params.id));
+    sendServerStatus(res, girl, 200);
   } catch (err) {
     console.log(err);
-    res.status(500).send('Server error', err);
+    sendError(err, res);
   }
 }

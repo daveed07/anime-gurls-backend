@@ -55,9 +55,9 @@ const insertProperty = async (client, property, girlId) => {
 exports.postGirl = async (req, res) => {
     try {
         const client = await pool.connect();
-        const girl = req.body.girl;
-        const properties = req.body.properties;
-        const tags = req.body.tags;
+        const girl = req.body;
+        const properties = girl.properties;
+        const tags = girl.tags;
         // Check if girl already exists
         if (await queryGirl(girl.url)) {
             res.status(200).send({ result: "Girl already exists" });

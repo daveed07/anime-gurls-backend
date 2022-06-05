@@ -37,8 +37,8 @@ exports.queryGirl = async (identifier) => {
     const tags = await queryTags(girl.id);
 
     return {
-        girl: girl,
-        properties: properties,
-        tags: tags
+        ...girl,
+        properties,
+        tags
     };
 }

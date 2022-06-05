@@ -1,13 +1,19 @@
-const pool = require('./pool.config').pool;
+const { queryGirls } = require('./query/girls');
+const sql = require('./utils/sql');
+const { sendServerStatus, sendError } = require('./utils/status');
 
 exports.getImagesByAnime = async (req, res) => {
   try {
-    const client = await pool.connect();
-    const result = await client.query("SELECT * FROM girl WHERE anime = $1", [req.params.anime]);
-    res.status(200).json(result.rows);
-    client.release();
+    const girls = await sql.query("SELECT * FROM girl WHERE anime LIKE $1", [`%${req.params.anime}%`]);
+    if (!sql.checkQuery(girls)) {
+      sendServerStatus(res, girls.rows, 200);
+      return;
+    }
+
+    let girlsRows = await queryGirls(girls);
+    sendServerStatus(res, girlsRows, 200);
   } catch (err) {
     console.log(err);
-    res.status(500).send('Server error', err);
+    sendError(err, res);
   }
 }

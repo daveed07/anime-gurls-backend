@@ -1,13 +1,19 @@
-const pool = require('./pool.config').pool;
+const { sendError, sendServerStatus } = require('./utils/status');
+const sql = require('./utils/sql');
+const { queryGirls } = require('./query/girls');
 
 exports.getNSFWImages = async (req, res) => {
   try {
-    const client = await pool.connect();
-    const result = await client.query("SELECT * FROM girl WHERE is_nsfw = true");
-    res.status(200).json(result.rows);
-    client.release();
+    const girls = await sql.query("SELECT * FROM girl WHERE is_nsfw = TRUE");
+    if (!sql.checkQuery(girls)) {
+      sendServerStatus(res, [], 200);
+      return;
+    }
+    let girlRows = await queryGirls(girls);
+
+    sendServerStatus(res, girlRows, 200);
   } catch (err) {
     console.log(err);
-    res.status(500).send('Server error', err);
+    sendError(err, res);
   }
 }
