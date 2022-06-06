@@ -20,7 +20,6 @@ exports.getImages = async (req, res) => {
 
     res.status(200).send({ girls: girlRes });
   } catch (err) {
-    console.log(err);
     res.status(500).send({ "Server error": err });
   }
 }

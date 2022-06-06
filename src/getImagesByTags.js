@@ -14,14 +14,26 @@ exports.getImagesByTags = async (req, res) => {
             let girlId = await sql.query("SELECT girl_id FROM tag_to_girl WHERE tag_id = $1", [tag.id]);
             if (sql.checkQuery(girlId)) {
                 let girl = await queryGirl(girlId.rows[0].girl_id);
+                // Check to make sure we don't already have this girl
                 if (girl) {
-                    girls.push(girl);
+                    // fuckYou has no real name sense.
+                    let fuckYou = false;
+                    // Loop through the girls we already have
+                    for (let j = 0; j < girls.length; j++) {
+                        // If the ids match then fuckYou!
+                        if (girl.id === girls[j].id) {
+                            fuckYou = true;
+                            break;
+                        }
+                    }
+                    if (!fuckYou) {
+                        girls.push(girl);
+                    }
                 }
             }
         }
         sendServerStatus(res, girls, 200);
     } catch (err) {
-        console.log(err);
         sendError(err, res);
     }
 }

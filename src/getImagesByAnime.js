@@ -4,7 +4,7 @@ const { sendServerStatus, sendError } = require('./utils/status');
 
 exports.getImagesByAnime = async (req, res) => {
   try {
-    const girls = await sql.query("SELECT * FROM girl WHERE anime LIKE $1", [`%${req.params.anime}%`]);
+    const girls = await sql.query("SELECT * FROM girl WHERE anime LIKE $1", [`%${req.params.anime.toLowerCase()}%`]);
     if (!sql.checkQuery(girls)) {
       sendServerStatus(res, girls.rows, 200);
       return;
@@ -13,7 +13,6 @@ exports.getImagesByAnime = async (req, res) => {
     let girlsRows = await queryGirls(girls);
     sendServerStatus(res, girlsRows, 200);
   } catch (err) {
-    console.log(err);
     sendError(err, res);
   }
 }

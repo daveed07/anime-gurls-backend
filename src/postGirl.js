@@ -1,17 +1,27 @@
-const pool = require('./pool.config').pool;
+const { checkSpecificJsonForUndefined, checkJsonForUndefined } = require('./utils/checkJsonForUndefined');
+const sql = require('./utils/sql');
+const { sendServerStatus, sendError } = require('./utils/status');
 const queryGirl = require("./query/girl").queryGirl;
 
 // Inserts a girl into the DB. Returns the girls id if succesfull, else a 0.
-const insertGirl = async (client, girl) => {
+const insertGirl = async (girl) => {
+    // Check if url, width, height, is_nsfw are undefined
+    if (checkSpecificJsonForUndefined(girl, ["url", "width", "height", "is_nsfs"]) !== null) {
+        return 0;
+    }
+
     const queryString = `INSERT INTO girl(
         name, anime, url, width, height, is_nsfw
         ) VALUES (
             $1, $2, $3, $4, $5, $6
         )`;
-    await client.query(queryString, [girl.name, girl.anime, girl.url, girl.width, girl.height, girl.is_nsfw]);
+    const name = girl.name !== undefined ? girl.name.toLowerCase() : null;
+    const anime = girl.anime !== undefined ? girl.anime.toLowerCase() : null;
+
+    await sql.query(queryString, [name, anime, girl.url, girl.width, girl.height, girl.is_nsfw]);
 
     // Query the id of the girl
-    const id = await client.query(`SELECT id FROM girl WHERE url = $1`, [girl.url]);
+    const id = sql.query(`SELECT id FROM girl WHERE url = $1`, [girl.url]);
     if (id.rows.length > 0) {
         return id.rows[0].id;
     } else {
@@ -20,31 +30,49 @@ const insertGirl = async (client, girl) => {
 }
 
 // Inserts a tag into the DB. Returns the tag id if succesfull, else a 0.
-const insertTag = async (client, tag) => {
+const insertTag = async (tag) => {
+    // Is tag undefined?
+    if (tag === undefined) {
+        return 0;
+    }
+
     // First, does the Tag already exist?
-    const tagQuery = await client.query(`SELECT id FROM tag WHERE name = $1`, [tag]);
+    const tagQuery = await sql.query(`SELECT id FROM tag WHERE name = $1`, [tag]);
     if (tagQuery.rows.length > 0) {
         return tagQuery.rows[0].id;
     } else {
         const queryString = `INSERT INTO tag(
             name
-            ) VALUES ('${tag}')`;
-        await client.query(queryString);
+            ) VALUES ($1)`;
+        await sql.query(queryString, [tag.toLowerCase()]);
         // Should have already been created, so query again.
-        return insertTag(client, tag);
+        return insertTag(tag);
     }
 }
 
 // Inserts a property into the DB. Returns the property id if succesfull, else a 0.
-const insertProperty = async (client, property, girlId) => {
+const insertProperty = async (property, girlId) => {
+    // Does property have undefined values?
+    if (checkJsonForUndefined(property) !== null) {
+        return 0;
+    }
+
     const queryString = `INSERT INTO property(
         hair_color, hair_length, breasts, eye_color, girl_id
         ) VALUES (
-            '${property.hair_color}', '${property.hair_length}', '${property.breasts}', '${property.eye_color}', ${girlId}
+            $1, $2, $3, $4, $5
         )`;
-    await client.query(queryString);
+    await sql.query(
+        queryString, [
+            property.hair_color.toLowerCase(), 
+            property.hair_length.toLowerCase(), 
+            property.breasts.toLowerCase(), 
+            property.eye_color.toLowerCase(),
+            girlId
+        ]
+    );
     // Query the id of the property
-    let id = await client.query("SELECT id FROM property WHERE girl_id = $1", [girlId]);
+    let id = await sql.query("SELECT id FROM property WHERE girl_id = $1", [girlId]);
     if (id.rows.length > 0) {
         return id.rows[0].id;
     } else {
@@ -54,13 +82,12 @@ const insertProperty = async (client, property, girlId) => {
 
 exports.postGirl = async (req, res) => {
     try {
-        const client = await pool.connect();
         const girl = req.body;
         const properties = girl.properties;
         const tags = girl.tags;
         // Check if girl already exists
         if (await queryGirl(girl.url)) {
-            res.status(200).send({ result: "Girl already exists" });
+            sendServerStatus(res, girl, 200);
             return;
         }
 
@@ -75,17 +102,12 @@ exports.postGirl = async (req, res) => {
                 let tagId = await insertTag(client, tag);
                 if (tagId > 0) {
                     // Insert into tag to girl table
-                    await client.query(`INSERT INTO tag_to_girl (tag_id, girl_id) VALUES (${tagId} ,${girlId})`);
+                    await sql.query(`INSERT INTO tag_to_girl (tag_id, girl_id) VALUES (${tagId} ,${girlId})`);
                 }
             }
         }
-        res.status(200).json({
-            girlId: girlId,
-            propertyId: propertyId
-        });
-        client.release();
+        sendServerStatus(res, {girl_id: girlId, property_id: propertyId}, 200);
     } catch (err) {
-        console.log(err);
-        res.status(500).send({ 'Server error': err });
+        sendError(err, res);
     }
 }

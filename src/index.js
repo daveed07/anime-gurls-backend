@@ -30,13 +30,13 @@ app.route('/api/v1/imgs/random').get(getRandomImage);
 
 app.route('/api/v1/imgs/nsfw').get(getNSFWImages);
 
+app.route('/api/v1/imgs/props').get(getImagesByProps);
+
 app.route('/api/v1/imgs/:id').get(getImagesById);
 
 app.route('/api/v1/imgs/anime/:anime').get(getImagesByAnime);
 
 app.route('/api/v1/imgs/tags/:tags').get(getImagesByTags);
-
-app.route('/api/v1/imgs/props').get(getImagesByProps);
 
 app.route('/api/v1/imgs/upload').post(postGirl);
 
