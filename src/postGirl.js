@@ -6,9 +6,9 @@ const insertGirl = async (client, girl) => {
     const queryString = `INSERT INTO girl(
         name, anime, url, width, height, is_nsfw
         ) VALUES (
-            '${girl.name}', '${girl.anime}', '${girl.url}', ${girl.width}, ${girl.height}, ${girl.is_nsfw}
+            $1, $2, $3, $4, $5, $6
         )`;
-    await client.query(queryString);
+    await client.query(queryString, [girl.name, girl.anime, girl.url, girl.width, girl.height, girl.is_nsfw]);
 
     // Query the id of the girl
     const id = await client.query(`SELECT id FROM girl WHERE url = $1`, [girl.url]);
