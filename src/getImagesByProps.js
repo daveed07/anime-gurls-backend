@@ -1,13 +1,13 @@
-// const sql = require('./utils/sql');
-// const queryProperty = require('./query/property').queryProperty;
-// const queryGirl = require('./query/girl');
-// const { sendServerStatus, sendError } = require('./utils/status');
+const sql = require('./utils/sql');
+const queryProperty = require('./query/property').queryProperty;
+const queryGirl = require('./query/girl');
+const { sendServerStatus, sendError } = require('./utils/status');
 
 exports.getImagesByProps = async (req, res) => {
     console.log("Yo");
     try {
         // Get params from ?
-        const data = req.props;
+        const data = req.query;
         const result = await queryProperty(data);
         let girls = [];
         if (sql.checkQuery(result)) {
