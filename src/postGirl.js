@@ -25,7 +25,7 @@ const insertGirl = async (girl) => {
     // Query the id of the girl
     const id = await sql.query(`SELECT id FROM girl WHERE url = $1`, [girl.url]);
 
-    if (id.rows.length > 0) {
+    if (sql.checkQuery(id)) {
         return id.rows[0].id;
     } else {
         return 0;
@@ -41,7 +41,7 @@ const insertTag = async (tag) => {
 
     // First, does the Tag already exist?
     const tagQuery = await sql.query(`SELECT id FROM tag WHERE name = $1`, [tag]);
-    if (tagQuery.rows.length > 0) {
+    if (sql.checkQuery(tagQuery)) {
         return tagQuery.rows[0].id;
     } else {
         const queryString = `INSERT INTO tag(
@@ -76,7 +76,7 @@ const insertProperty = async (property, girlId) => {
     );
     // Query the id of the property
     let id = await sql.query("SELECT id FROM property WHERE girl_id = $1", [girlId]);
-    if (id.rows.length > 0) {
+    if (sql.checkQuery(id)) {
         return id.rows[0].id;
     } else {
         return 0;
