@@ -5,6 +5,8 @@ const getRandomImage = require('./getRandomImage').getRandomImage;
 const getNSFWImages = require('./getNSFWImages').getNSFWImages;
 const getImagesById = require('./getImagesById').getImagesById;
 const getImagesByAnime = require('./getImagesByAnime').getImagesByAnime;
+const getImagesByProps = require('./getImagesByProps').getImagesByProps;
+const getImagesByTags = require('./getImagesByTags').getImagesByTags;
 const postGirl = require('./postGirl').postGirl;
 const app = express();
 const PORT = process.env.PORT;
@@ -28,9 +30,13 @@ app.route('/api/v1/imgs/random').get(getRandomImage);
 
 app.route('/api/v1/imgs/nsfw').get(getNSFWImages);
 
+app.route('/api/v1/imgs/props').get(getImagesByProps);
+
 app.route('/api/v1/imgs/:id').get(getImagesById);
 
 app.route('/api/v1/imgs/anime/:anime').get(getImagesByAnime);
+
+app.route('/api/v1/imgs/tags/:tags').get(getImagesByTags);
 
 app.route('/api/v1/imgs/upload').post(postGirl);
 

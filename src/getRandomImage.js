@@ -15,7 +15,6 @@ exports.getRandomImage = async (req, res) => {
 
     sendServerStatus(res, girl, 200);
   } catch (err) {
-    console.log(err);
     sendError(err, res);
   }
 }

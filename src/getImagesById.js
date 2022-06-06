@@ -6,7 +6,6 @@ exports.getImagesById = async (req, res) => {
     const girl = await queryGirl(parseInt(req.params.id));
     sendServerStatus(res, girl, 200);
   } catch (err) {
-    console.log(err);
     sendError(err, res);
   }
 }

@@ -13,7 +13,6 @@ exports.getNSFWImages = async (req, res) => {
 
     sendServerStatus(res, girlRows, 200);
   } catch (err) {
-    console.log(err);
     sendError(err, res);
   }
 }
