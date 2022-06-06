@@ -6,7 +6,9 @@ const queryGirl = require("./query/girl").queryGirl;
 // Inserts a girl into the DB. Returns the girls id if succesfull, else a 0.
 const insertGirl = async (girl) => {
     // Check if url, width, height, is_nsfw are undefined
-    if (checkSpecificJsonForUndefined(girl, ["url", "width", "height", "is_nsfs"]) !== null) {
+    let n = checkSpecificJsonForUndefined(girl, ["url", "width", "height", "is_nsfw"]);
+    if (n!== null) {
+        console.log("Undefined somewhere " + n.key + ": " + n.value);
         return 0;
     }
 
@@ -21,7 +23,8 @@ const insertGirl = async (girl) => {
     await sql.query(queryString, [name, anime, girl.url, girl.width, girl.height, girl.is_nsfw]);
 
     // Query the id of the girl
-    const id = sql.query(`SELECT id FROM girl WHERE url = $1`, [girl.url]);
+    const id = await sql.query(`SELECT id FROM girl WHERE url = $1`, [girl.url]);
+
     if (id.rows.length > 0) {
         return id.rows[0].id;
     } else {
@@ -91,15 +94,15 @@ exports.postGirl = async (req, res) => {
             return;
         }
 
-        let girlId = await insertGirl(client, girl);
+        let girlId = await insertGirl(girl);
         let propertyId = 0;
         if (girlId > 0) {
             // We successfully uploaded a girl, continue
-            propertyId = await insertProperty(client, properties, girlId);
+            propertyId = await insertProperty(properties, girlId);
             // Loop through tags and insert one by one.
             for (let i = 0; i < tags.length; i++) {
                 let tag = tags[i];
-                let tagId = await insertTag(client, tag);
+                let tagId = await insertTag(tag);
                 if (tagId > 0) {
                     // Insert into tag to girl table
                     await sql.query(`INSERT INTO tag_to_girl (tag_id, girl_id) VALUES (${tagId} ,${girlId})`);
